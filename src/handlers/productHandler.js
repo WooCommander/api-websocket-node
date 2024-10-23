@@ -1,30 +1,30 @@
 const productController = require('../controllers/productController');
 
-const handleProductCommands = async (ws, type, payload) => {
-  switch (type) {
-    case 'addProduct':
-      const { name, price } = payload;
+const handleProductCommands  = async (ws, method, valueData, requestId) => {
+  switch (method) {
+    case 'AddProduct':
+      const { name, price } = valueData;
       if (!name || !price) {
-        ws.send(JSON.stringify({ error: 'Необходимо указать название и цену' }));
+        ws.send(JSON.stringify({ error: 'Необходимо указать название и цену', requestId }));
         return;
       }
       const addedProduct = await productController.addProduct(name, price);
-      ws.send(JSON.stringify(addedProduct));
+      ws.send(JSON.stringify({ ...addedProduct, requestId }));
       break;
 
-    case 'getProducts':
+    case 'GetProducts':
       const products = await productController.getProducts();
-      ws.send(JSON.stringify(products));
+      ws.send(JSON.stringify({ ...products, requestId }));
       break;
 
-    case 'deleteProduct':
-      const { id } = payload;
+    case 'DeleteProduct':
+      const { id } = valueData;
       const deletedProduct = await productController.deleteProduct(id);
-      ws.send(JSON.stringify(deletedProduct));
+      ws.send(JSON.stringify({ ...deletedProduct, requestId }));
       break;
 
     default:
-      ws.send(JSON.stringify({ error: 'Неизвестная команда для товаров' }));
+      ws.send(JSON.stringify({ error: 'Неизвестный метод для товаров', requestId }));
   }
 };
 
