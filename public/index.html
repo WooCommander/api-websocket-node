@@ -34,10 +34,26 @@
     <textarea rows="6" type="text" id="messageInput" placeholder="Введите сообщение"></textarea>
     
     <button id="sendButton">Отправить</button>
+<pre>
 
+    {
+        "Controller": "AuthController",
+        "Method": "Login",
+        "RequestId": "b89dcdb9-dec3-46fd-8437-c9c7f7bb6377",
+        "Value": "{\"email\":\"user@gmail.com\", \"password\":\"123\"}",
+        "Token":"f86e07ec-4542-4b21-806d-e92d49bebb8b"
+      }
+      
+      {
+        "Controller": "ProductController",
+        "Method": "GetProducts",
+        "RequestId": "b89dcdb9-dec3-46fd-8437-c9c7f7bb6377",
+        "Token":"f86e07ec-4542-4b21-806d-e92d49bebb8b"
+      }
+</pre>
     <script>
         // Установим соединение с WebSocket сервером
-        const socket = new WebSocket('ws://localhost:8080');
+        const socket = new WebSocket('ws://9d5b-37-26-132-88.ngrok-free.app');
 
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
