@@ -48,16 +48,11 @@ npm install sequelize pg pg-hstore
   "Value": "{\"name\":\"John Doe\", \"email\":\"john.doe@example.com\", \"password\":\"password123\"}"
 }
 
-{
-  "Controller": "AuthController",
-  "Method": "Login",
-  "RequestId": "b89dcdb9-dec3-46fd-8437-c9c7f7bb6377",
-  "Value": "{\"email\":\"john.doe@example.com\", \"password\":\"password123\"}"
-}
 
 {   "Controller": "AuthController",   "Method": "Register", 
   "RequestId": "c75dcdb9-dec3-46fd-8437-c9c7f7bb6376",   "Value": 
 "{\"name\":\"user\", \"email\":\"user@gmail.com\", \"password\":\"123\"}" }
+
 {   "Controller": "AuthController",   "Method": "Register", 
   "RequestId": "c75dcdb9-dec3-46fd-8437-c9c7f7bb6376",   "Value": 
 "{\"name\":\"user1\", \"email\":\"user1@gmail.com\", \"password\":\"123\"}" }
@@ -66,5 +61,13 @@ npm install sequelize pg pg-hstore
   "Controller": "AuthController",
   "Method": "Login",
   "RequestId": "b89dcdb9-dec3-46fd-8437-c9c7f7bb6377",
-  "Value": "{\"email\":\"user@gmail.com\", \"password\":\"123\"}"
+  "Value": "{\"email\":\"user@gmail.com\", \"password\":\"123\"}",
+  "Token":"f86e07ec-4542-4b21-806d-e92d49bebb8b"
+}
+
+{
+  "Controller": "ProductController",
+  "Method": "GetProducts",
+  "RequestId": "b89dcdb9-dec3-46fd-8437-c9c7f7bb6377",
+  "Token":"f86e07ec-4542-4b21-806d-e92d49bebb8b"
 }

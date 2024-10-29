@@ -1,23 +1,21 @@
 const jwt = require('jsonwebtoken');
+const { validateToken } = require('../services/sessionService');
 
 // Middleware для проверки JWT токена
-const authenticateToken = (ws, message, next) => {
-  const parsedMessage = JSON.parse(message);
-  const token = parsedMessage.Token;
-
-  if (!token) {
+const authenticateToken = (ws, Token, next) => {
+  
+  if (!Token) {
     ws.send(JSON.stringify({ error: 'Токен отсутствует' }));
     return;
   }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      ws.send(JSON.stringify({ error: 'Недействительный токен' }));
-      return;
-    }
-    ws.user = user;
-    next();
-  });
+  const user = validateToken(Token)
+  if (!user) {
+    ws.send(JSON.stringify({ error: 'Недействительный токен' }));
+    return;
+  }
+  ws.user = user;
+  next();
+  ;
 };
 
 module.exports = authenticateToken;

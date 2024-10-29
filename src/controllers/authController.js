@@ -1,6 +1,8 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
-const sessionService = require('../services/sessionService');
+const { addToken, validateToken } = require('../services/sessionService');
+
+
 
 class AuthController {
     async register(name, email, password) {
@@ -19,6 +21,8 @@ class AuthController {
     };
     // Авторизация пользователя с сохранением токена
     async login(email, password, clientToken) {
+        console.log("clientToken",clientToken);
+        
         try {
             const user = await User.findOne({ where: { email } });
             if (!user) {
@@ -31,7 +35,7 @@ class AuthController {
             }
 
             // Сохраняем токен клиента и связываем его с пользователем
-            sessionService.addToken(clientToken, user.id);
+            addToken(clientToken, user.id);
 
             return { success: true, user };
         } catch (error) {
@@ -42,7 +46,7 @@ class AuthController {
 
     // Получение информации об авторизованном пользователе
     async getUserInfo (token){
-        const userId = sessionService.validateToken(token);
+        const userId = validateToken(token);
         if (!userId) {
             return { success: false, user: null, error: 'Пользователь не авторизован' };
         }

@@ -26,6 +26,8 @@ const addToken = (token, userId) => {
 
 // Проверка токена и обновление времени активности
 const validateToken = (token) => {
+    console.log("sessionTokens", sessionTokens);
+    
   const session = sessionTokens[token];
   
   if (!session) return null;
