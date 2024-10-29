@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
             font-family: Arial, sans-serif;
             padding: 20px;
         }
+
         #messages {
             border: 1px solid #ddd;
             padding: 10px;
@@ -16,17 +18,19 @@
             height: 200px;
             overflow-y: scroll;
         }
+
         #messageInput {
             width: 80%;
         }
     </style>
 </head>
+
 <body>
 
     <h1>WebSocket Client</h1>
-    
+
     <div id="messages"></div>
-    
+
     <input type="text" id="messageInput" placeholder="Введите сообщение">
     <button id="sendButton">Отправить</button>
 
@@ -37,6 +41,29 @@
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
+        
+        function generateToken() {
+            return crypto.randomUUID();
+        }
+
+        // Получение токена из localStorage
+        function getToken() {
+            return localStorage.getItem('auth_token');
+        }
+
+        // Сохранение токена в localStorage
+        function setToken(token) {
+            localStorage.setItem('auth_token', token);
+        }
+
+        // Проверка и получение токена
+        let token = getToken();
+        if (!token) {
+            // Если токен не найден, создаем новый и сохраняем его
+            token = generateToken();
+            setToken(token);
+        }
+
 
         // Обработчик на открытие соединения
         socket.onopen = function () {
@@ -81,4 +108,5 @@
         }
     </script>
 </body>
+
 </html>

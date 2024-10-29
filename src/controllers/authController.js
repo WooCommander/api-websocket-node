@@ -1,9 +1,8 @@
 const User = require('../models/userModel');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const sessionService = require('../services/sessionService');
 
 class AuthController {
-    // Регистрация пользователя
     async register(name, email, password) {
         try {
             const existingUser = await User.findOne({ where: { email } });
@@ -18,30 +17,38 @@ class AuthController {
             return { success: false, error: 'Ошибка регистрации' };
         }
     };
-
-    // Авторизация пользователя
-    async login(email, password) {
+    // Авторизация пользователя с сохранением токена
+    async login(email, password, clientToken) {
         try {
             const user = await User.findOne({ where: { email } });
             if (!user) {
                 return { success: false, error: 'Неправильный email или пароль' };
             }
 
-            const isPasswordValid = await user.checkPassword(password);
+            const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
                 return { success: false, error: 'Неправильный email или пароль' };
             }
 
-            // Создание JWT токена
-            const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-                expiresIn: '1h',
-            });
+            // Сохраняем токен клиента и связываем его с пользователем
+            sessionService.addToken(clientToken, user.id);
 
-            return { success: true, token, user };
+            return { success: true, user };
         } catch (error) {
             console.error('Ошибка авторизации:', error);
             return { success: false, error: 'Ошибка авторизации' };
         }
+    };
+
+    // Получение информации об авторизованном пользователе
+    async getUserInfo (token){
+        const userId = sessionService.validateToken(token);
+        if (!userId) {
+            return { success: false, user: null, error: 'Пользователь не авторизован' };
+        }
+
+        const user = await User.findByPk(userId, { attributes: { exclude: ['password'] } });
+        return { success: true, user };
     };
 }
 module.exports = { AuthController };

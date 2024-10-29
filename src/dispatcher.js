@@ -3,28 +3,35 @@ const productController = require('./controllers/productController');
 const { handleProductCommands } = require('./handlers/productHandler');
 const { handleUserCommands } = require('./handlers/userHandler');
 const authenticateToken = require('./middlewares/authMiddleware');
-const { handleAuthCommands } = require('./handlers/authHandler');
+const { handleAuthMethods } = require('./handlers/authHandler');
 
 const handleMessage = async (ws, message) => {
+
   try {
     const parsedMessage = JSON.parse(message);
-    const { Controller, Method, Value, RequestId } = parsedMessage;
 
+    const { Controller, Method, Token, Value, RequestId } = parsedMessage;
     const valueData = Value ? JSON.parse(Value) : {};
+
+    // Проверка токена для всех команд, кроме логина
+    if (Method !== 'Login' && Method !== 'Register' && !sessionService.validateToken(Token)) {
+      ws.send(JSON.stringify({ error: 'Токен недействителен или отсутствует', requestId: RequestId }));
+      return;
+    }
 
     switch (Controller) {
       case 'AuthController':
-        await handleAuthCommands(ws, Method, valueData, RequestId);
+        await handleAuthMethods(ws, Method, valueData, Token, RequestId);
         break;
       case 'UserController':
         authenticateToken(ws, method, async () => {
-          await handleUserCommands(ws, Method, valueData, RequestId);
+          await handleUserCommands(ws, Method, valueData, Token, RequestId);
         })
         break;
 
       case 'ProductController':
         authenticateToken(ws, method, async () => {
-          await handleProductCommands(ws, Method, valueData, RequestId);
+          await handleProductCommands(ws, Method, valueData, Token, RequestId);
         })
         break;
 

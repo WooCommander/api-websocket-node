@@ -54,3 +54,17 @@ npm install sequelize pg pg-hstore
   "RequestId": "b89dcdb9-dec3-46fd-8437-c9c7f7bb6377",
   "Value": "{\"email\":\"john.doe@example.com\", \"password\":\"password123\"}"
 }
+
+{   "Controller": "AuthController",   "Method": "Register", 
+  "RequestId": "c75dcdb9-dec3-46fd-8437-c9c7f7bb6376",   "Value": 
+"{\"name\":\"user\", \"email\":\"user@gmail.com\", \"password\":\"123\"}" }
+{   "Controller": "AuthController",   "Method": "Register", 
+  "RequestId": "c75dcdb9-dec3-46fd-8437-c9c7f7bb6376",   "Value": 
+"{\"name\":\"user1\", \"email\":\"user1@gmail.com\", \"password\":\"123\"}" }
+
+{
+  "Controller": "AuthController",
+  "Method": "Login",
+  "RequestId": "b89dcdb9-dec3-46fd-8437-c9c7f7bb6377",
+  "Value": "{\"email\":\"user@gmail.com\", \"password\":\"123\"}"
+}
