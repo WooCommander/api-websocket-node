@@ -29,11 +29,10 @@ const addProduct = async (name, productGroupId, initialPrice) => {
   }
 };
 
-// Получение списка товаров с пагинацией
-const getProducts = async (page = 1, pageSize = 10) => {
+// Получение списка товаров с информацией о группах и последней ценой
+const getProducts = async () => {
   try {
-    const offset = (page - 1) * pageSize;
-    const products = await Product.findAndCountAll({
+    const products = await Product.findAll({
       include: [
         {
           model: ProductGroup,
@@ -46,52 +45,11 @@ const getProducts = async (page = 1, pageSize = 10) => {
           limit: 1,
         },
       ],
-      limit: pageSize,
-      offset: offset,
     });
-
-    return { 
-      success: true, 
-      products: products.rows, 
-      total: products.count, 
-      totalPages: Math.ceil(products.count / pageSize) 
-    };
+    return { success: true, products };
   } catch (error) {
     console.error('Ошибка получения списка товаров:', error);
     return { success: false, error: 'Не удалось получить список товаров' };
-  }
-};
-
-// Получение товара по ID с информацией о группе и последней ценой
-const getProductById = async (id) => {
-  if (!id) {
-    return { success: false, error: 'ID товара обязателен' };
-  }
-
-  try {
-    const product = await Product.findByPk(id, {
-      include: [
-        {
-          model: ProductGroup,
-          attributes: ['name'],
-        },
-        {
-          model: ProductPrice,
-          attributes: ['price', 'quantity', 'dateRegister'],
-          order: [['dateRegister', 'DESC']],
-          limit: 1,
-        },
-      ],
-    });
-
-    if (!product) {
-      return { success: false, error: 'Товар не найден' };
-    }
-
-    return { success: true, product };
-  } catch (error) {
-    console.error('Ошибка получения товара:', error);
-    return { success: false, error: 'Не удалось получить товар' };
   }
 };
 
@@ -109,7 +67,7 @@ const updateProduct = async (id, name, productGroupId) => {
 
     const group = await ProductGroup.findByPk(productGroupId);
     if (!group) {
-      return { success: false, error: 'Гр��ппа продуктов не найдена' };
+      return { success: false, error: 'Группа продуктов не найдена' };
     }
 
     product.name = name;
@@ -145,38 +103,4 @@ const deleteProduct = async (id) => {
   }
 };
 
-// Обновление цены товара
-const updateProductPrice = async (productId, newPrice) => {
-  if (!productId || newPrice === undefined) {
-    return { success: false, error: 'ID товара и новая цена обязательны' };
-  }
-
-  try {
-    const product = await Product.findByPk(productId);
-    if (!product) {
-      return { success: false, error: 'Товар не найден' };
-    }
-
-    await ProductPrice.create({
-      productId: product.id,
-      price: newPrice,
-      quantity: 1,
-      dateRegister: new Date(),
-    });
-
-    return { success: true, message: 'Цена товара обновлена' };
-  } catch (error) {
-    console.error('Ошибка обновления цены товара:', error);
-    return { success: false, error: 'Не удалось обновить цену товара' };
-  }
-};
-
-module.exports = { 
-  addProduct, 
-  getProducts, 
-  updateProduct, 
-  deleteProduct, 
-  getProductById, 
-  updateProductPrice, 
-  searchProducts 
-};
+module.exports = { addProduct, getProducts, updateProduct, deleteProduct };
