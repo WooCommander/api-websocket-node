@@ -1,5 +1,7 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const sequelize = new Sequelize(process.env.PG_DATABASE, process.env.PG_USER, process.env.PG_PASSWORD, {
   host: process.env.PG_HOST,
@@ -15,4 +17,8 @@ sequelize.authenticate()
     console.error('Ошибка подключения к базе данных:', err);
   });
 
-module.exports = sequelize;
+export const define = (modelName, attributes) => {
+  return sequelize.define(modelName, attributes);
+};
+
+export { sequelize }

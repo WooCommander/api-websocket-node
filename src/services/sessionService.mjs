@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 const sessionTokens = {};
 
@@ -61,4 +61,4 @@ const clearExpiredTokens = () => {
 // Запуск очистки просроченных токенов каждые 5 минут
 setInterval(clearExpiredTokens, 5 * 60 * 1000);
 
-module.exports = { getOrCreateToken, addToken, validateToken, removeToken };
+export { getOrCreateToken, addToken, validateToken, removeToken };

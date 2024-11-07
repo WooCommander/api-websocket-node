@@ -1,8 +1,12 @@
-const WebSocket = require('ws');
-const sequelize = require('./config/db');
-const User = require('./models/userModel');
+import express from 'express';
+import dotenv from 'dotenv';
+import { sequelize } from './config/db.mjs'; // Убедитесь, что путь и расширение файла правильные
 
-const { handleMessage } = require('./dispatcher');
+dotenv.config();
+
+import ws from 'ws';
+import { handleMessage } from './dispatcher.mjs'; // Убедитесь, что путь и расширение файла правильные
+
 sequelize.sync({ force: false })
     .then(() => {
         console.log('Таблицы синхронизированы');
@@ -10,7 +14,12 @@ sequelize.sync({ force: false })
     .catch((error) => {
         console.error('Ошибка синхронизации таблиц:', error);
     });
-const wss = new WebSocket.Server({ port: process.env.PORT || 8080 });
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const newLocal = new ws.Server({ port: process.env.PORT || 8080 });
+const wss = newLocal;
 
 wss.on('connection', (ws) => {
     console.log('Новое WebSocket соединение');
@@ -22,6 +31,10 @@ wss.on('connection', (ws) => {
     ws.on('close', () => {
         console.log('Соединение закрыто');
     });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 console.log(`WebSocket сервер запущен на порту ${process.env.PORT || 8080}`);

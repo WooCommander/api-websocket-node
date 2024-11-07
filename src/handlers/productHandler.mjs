@@ -1,8 +1,8 @@
-const productController = require('../controllers/productController');
-const { validateToken } = require('../services/sessionService');
+import { addProduct, getProducts, deleteProduct } from '../controllers/productController.mjs';
+import '../services/sessionService.mjs';
 
 
-const handleProductCommands = async (ws, method, valueData, Token, requestId) => {
+const handleProductCommands = async (ws, method, valueData, _Token, requestId) => {
 
   switch (method) {
     case 'AddProduct':
@@ -11,18 +11,18 @@ const handleProductCommands = async (ws, method, valueData, Token, requestId) =>
         ws.send(JSON.stringify({ error: 'Необходимо указать название и цену', requestId }));
         return;
       }
-      const addedProduct = await productController.addProduct(name, price);
+      const addedProduct = await addProduct(name, price);
       ws.send(JSON.stringify({ ...addedProduct, requestId }));
       break;
 
     case 'GetProducts':
-      const products = await productController.getProducts();
+      const products = await getProducts();
       ws.send(JSON.stringify({ ...products, requestId }));
       break;
 
     case 'DeleteProduct':
       const { id } = valueData;
-      const deletedProduct = await productController.deleteProduct(id);
+      const deletedProduct = await deleteProduct(id);
       ws.send(JSON.stringify({ ...deletedProduct, requestId }));
       break;
 
@@ -32,4 +32,4 @@ const handleProductCommands = async (ws, method, valueData, Token, requestId) =>
 }
 
 
-module.exports = { handleProductCommands };
+export { handleProductCommands };

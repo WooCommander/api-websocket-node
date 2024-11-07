@@ -1,6 +1,6 @@
-const Product = require('../models/productModel');
-const ProductGroup = require('../models/productGroupModel');
-const ProductPrice = require('../models/productPriceModel');
+import { create, findAll, findByPk } from '../models/productModel.mjs';
+import ProductGroup, { findByPk as _findByPk } from '../models/productGroupModel.mjs';
+import ProductPrice, { create as _create, destroy } from '../models/productPriceModel.mjs';
 
 // Добавление товара с группой и начальной ценой
 const addProduct = async (name, productGroupId, initialPrice) => {
@@ -9,13 +9,13 @@ const addProduct = async (name, productGroupId, initialPrice) => {
   }
 
   try {
-    const group = await ProductGroup.findByPk(productGroupId);
+    const group = await _findByPk(productGroupId);
     if (!group) {
       return { success: false, error: 'Указанная группа продуктов не найдена' };
     }
 
-    const newProduct = await Product.create({ name, productGroupId });
-    await ProductPrice.create({
+    const newProduct = await create({ name, productGroupId });
+    await _create({
       productId: newProduct.id,
       price: initialPrice,
       quantity: 1,
@@ -32,7 +32,7 @@ const addProduct = async (name, productGroupId, initialPrice) => {
 // Получение списка товаров с информацией о группах и последней ценой
 const getProducts = async () => {
   try {
-    const products = await Product.findAll({
+    const products = await findAll({
       include: [
         {
           model: ProductGroup,
@@ -60,12 +60,12 @@ const updateProduct = async (id, name, productGroupId) => {
   }
 
   try {
-    const product = await Product.findByPk(id);
+    const product = await findByPk(id);
     if (!product) {
       return { success: false, error: 'Товар не найден' };
     }
 
-    const group = await ProductGroup.findByPk(productGroupId);
+    const group = await _findByPk(productGroupId);
     if (!group) {
       return { success: false, error: 'Группа продуктов не найдена' };
     }
@@ -88,12 +88,12 @@ const deleteProduct = async (id) => {
   }
 
   try {
-    const product = await Product.findByPk(id);
+    const product = await findByPk(id);
     if (!product) {
       return { success: false, error: 'Товар не найден' };
     }
 
-    await ProductPrice.destroy({ where: { productId: id } });
+    await destroy({ where: { productId: id } });
     await product.destroy();
 
     return { success: true, message: 'Товар и все связанные данные удалены' };
@@ -103,4 +103,4 @@ const deleteProduct = async (id) => {
   }
 };
 
-module.exports = { addProduct, getProducts, updateProduct, deleteProduct };
+export default { addProduct, getProducts, updateProduct, deleteProduct };

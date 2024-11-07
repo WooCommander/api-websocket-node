@@ -1,6 +1,6 @@
-const User = require('../models/userModel');
-const bcrypt = require('bcrypt');
-const { addToken, validateToken } = require('../services/sessionService');
+import User from '../models/userModel.mjs';
+import { compare } from 'bcrypt';
+import { addToken, validateToken } from '../services/sessionService.mjs';
 
 
 
@@ -29,7 +29,7 @@ class AuthController {
                 return { success: false, error: 'Неправильный email или пароль' };
             }
 
-            const isPasswordValid = await bcrypt.compare(password, user.password);
+            const isPasswordValid = await compare(password, user.password);
             if (!isPasswordValid) {
                 return { success: false, error: 'Неправильный email или пароль' };
             }
@@ -55,4 +55,4 @@ class AuthController {
         return { success: true, user };
     };
 }
-module.exports = { AuthController };
+export { AuthController };

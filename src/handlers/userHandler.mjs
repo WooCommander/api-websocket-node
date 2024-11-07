@@ -1,5 +1,5 @@
-const userController = require('../controllers/userController');
-const authenticateToken = require('../middlewares/authMiddleware');
+import { addUser, getUsers, deleteUser } from '../controllers/userController.mjs';
+import authenticateToken from '../middlewares/authMiddleware.mjs';
 
 const handleUserCommands = async (ws, method, valueData, requestId) => {
   authenticateToken(ws, JSON.stringify({ Token: ws.token }), async () => {
@@ -10,18 +10,18 @@ const handleUserCommands = async (ws, method, valueData, requestId) => {
           ws.send(JSON.stringify({ error: 'Необходимо указать имя и email', requestId }));
           return;
         }
-        const addedUser = await userController.addUser(name, email);
+        const addedUser = await addUser(name, email);
         ws.send(JSON.stringify({ ...addedUser, requestId }));
         break;
 
       case 'GetUsers':
-        const users = await userController.getUsers();
+        const users = await getUsers();
         ws.send(JSON.stringify({ ...users, requestId }));
         break;
 
       case 'DeleteUser':
         const { id } = valueData;
-        const deletedUser = await userController.deleteUser(id);
+        const deletedUser = await deleteUser(id);
         ws.send(JSON.stringify({ ...deletedUser, requestId }));
         break;
 
@@ -31,4 +31,4 @@ const handleUserCommands = async (ws, method, valueData, requestId) => {
   })
 };
 
-module.exports = { handleUserCommands };
+export { handleUserCommands };

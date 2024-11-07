@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-const { validateToken } = require('../services/sessionService');
+import { validateToken } from '../services/sessionService.mjs';
 
 // Middleware для проверки JWT токена
 const authenticateToken = (ws, Token, next) => {
@@ -18,4 +17,4 @@ const authenticateToken = (ws, Token, next) => {
   ;
 };
 
-module.exports = authenticateToken;
+export default authenticateToken;

@@ -1,4 +1,4 @@
-const { AuthController } = require("../controllers/authController");
+import { AuthController } from "../controllers/authController.mjs";
 
 const authController = new AuthController()
 // Авторизация пользователя
@@ -23,4 +23,4 @@ const handleAuthMethods = async (ws, method, valueData, clientToken, requestId) 
             ws.send(JSON.stringify({ error: 'Неизвестный метод для авторизации', requestId }));
     }
 };
-module.exports = { handleAuthMethods }
+export  { handleAuthMethods }

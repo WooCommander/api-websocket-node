@@ -1,9 +1,13 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const Product = require('./Product');
-const User = require('./User'); // Импортируем модель User
+import { DataTypes } from 'sequelize';
+import { define } from '../config/db.mjs';
+import Product from './productModel.mjs';
+import User from './userModel.mjs'; // Импортируем модель User
 
-const ProductPrice = sequelize.define('ProductPrice', {
+// Увеличиваем лимит слушателей событий
+import { EventEmitter } from 'events';
+EventEmitter.defaultMaxListeners = 20;
+
+const ProductPrice = define('ProductPrice', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -40,4 +44,4 @@ const ProductPrice = sequelize.define('ProductPrice', {
   },
 });
 
-module.exports = ProductPrice;
+export default ProductPrice;

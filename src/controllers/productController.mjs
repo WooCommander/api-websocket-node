@@ -1,6 +1,6 @@
-const Product = require('../models/productModel');
-const ProductGroup = require('../models/productGroupModel');
-const ProductPrice = require('../models/productPriceModel');
+import Product from '../models/productModel.mjs';
+import ProductGroup from '../models/productGroupModel.mjs';
+import ProductPrice from '../models/productPriceModel.mjs';
 
 // Добавление товара с группой и начальной ценой
 const addProduct = async (name, productGroupId, initialPrice) => {
@@ -109,7 +109,7 @@ const updateProduct = async (id, name, productGroupId) => {
 
     const group = await ProductGroup.findByPk(productGroupId);
     if (!group) {
-      return { success: false, error: 'Гр��ппа продуктов не найдена' };
+      return { success: false, error: 'Группа продуктов не найдена' };
     }
 
     product.name = name;
@@ -171,12 +171,11 @@ const updateProductPrice = async (productId, newPrice) => {
   }
 };
 
-module.exports = { 
+export { 
   addProduct, 
   getProducts, 
   updateProduct, 
   deleteProduct, 
   getProductById, 
   updateProductPrice, 
-  searchProducts 
 };

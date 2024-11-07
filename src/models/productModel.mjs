@@ -1,8 +1,8 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const ProductGroup = require('./ProductGroup');
+import { DataTypes } from 'sequelize';
+import { define } from '../config/db.mjs';
+import ProductGroup from './productGroupModel.mjs';
 
-const Product = sequelize.define('Product', {
+const Product = define('Product', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -22,4 +22,4 @@ const Product = sequelize.define('Product', {
   },
 });
 
-module.exports = Product;
+export default Product;

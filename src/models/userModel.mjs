@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
-const { genSalt, hash, compare } = require('bcrypt');
-const { define: defineModel } = require('../config/db.mjs').default;
+import { DataTypes } from 'sequelize';
+import { genSalt, hash, compare } from 'bcrypt';
+import { define as defineModel } from '../config/db.mjs'; // Убедитесь, что путь и расширение файла правильные
 
 const User = defineModel('User', {
   id: {
@@ -34,4 +34,4 @@ User.prototype.checkPassword = async function (password) {
   return await compare(password, this.password);
 };
 
-module.exports = User;
+export default User;

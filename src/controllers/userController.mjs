@@ -1,4 +1,4 @@
-const User = require('../models/userModel');
+import User from "../models/userModel.mjs";
 
 // Добавление пользователя
 const addUser = async (name, email) => {
@@ -37,4 +37,4 @@ const deleteUser = async (id) => {
   }
 };
 
-module.exports = { addUser, getUsers, deleteUser };
+export { addUser, getUsers, deleteUser };

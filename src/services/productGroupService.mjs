@@ -1,4 +1,4 @@
-const ProductGroup = require('../models/productGroupModel');
+import { create, findAll, findByPk } from '../models/productGroupModel.mjs';
 
 // Добавление новой группы
 const addProductGroup = async (name) => {
@@ -7,7 +7,7 @@ const addProductGroup = async (name) => {
   }
 
   try {
-    const newGroup = await ProductGroup.create({ name });
+    const newGroup = await create({ name });
     return { success: true, group: newGroup };
   } catch (error) {
     console.error('Ошибка добавления группы:', error);
@@ -18,7 +18,7 @@ const addProductGroup = async (name) => {
 // Получение списка групп
 const getProductGroups = async () => {
   try {
-    const groups = await ProductGroup.findAll();
+    const groups = await findAll();
     return { success: true, groups };
   } catch (error) {
     console.error('Ошибка получения списка групп:', error);
@@ -33,7 +33,7 @@ const updateProductGroup = async (id, name) => {
   }
 
   try {
-    const group = await ProductGroup.findByPk(id);
+    const group = await findByPk(id);
     if (!group) {
       return { success: false, error: 'Группа не найдена' };
     }
@@ -54,7 +54,7 @@ const deleteProductGroup = async (id) => {
   }
 
   try {
-    const group = await ProductGroup.findByPk(id);
+    const group = await findByPk(id);
     if (!group) {
       return { success: false, error: 'Группа не найдена' };
     }
@@ -67,4 +67,4 @@ const deleteProductGroup = async (id) => {
   }
 };
 
-module.exports = { addProductGroup, getProductGroups, updateProductGroup, deleteProductGroup };
+export default { addProductGroup, getProductGroups, updateProductGroup, deleteProductGroup };

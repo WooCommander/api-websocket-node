@@ -1,5 +1,5 @@
-const ProductPrice = require('../models/productPriceModel');
-const Product = require('../models/productModel');
+import { create, findAll, findByPk } from '../models/productPriceModel.mjs';
+import { findByPk as _findByPk } from '../models/productModel.mjs';
 
 // Добавление записи о цене для продукта
 const addProductPrice = async (productId, price, quantity, dateRegister = new Date()) => {
@@ -9,13 +9,13 @@ const addProductPrice = async (productId, price, quantity, dateRegister = new Da
 
   try {
     // Проверка, существует ли продукт
-    const product = await Product.findByPk(productId);
+    const product = await _findByPk(productId);
     if (!product) {
       return { success: false, error: 'Продукт не найден' };
     }
 
     // Создание новой записи о цене
-    const newPriceRecord = await ProductPrice.create({ productId, price, quantity, dateRegister });
+    const newPriceRecord = await create({ productId, price, quantity, dateRegister });
     return { success: true, productPrice: newPriceRecord };
   } catch (error) {
     console.error('Ошибка добавления записи о цене:', error);
@@ -30,7 +30,7 @@ const getProductPrices = async (productId) => {
   }
 
   try {
-    const prices = await ProductPrice.findAll({
+    const prices = await findAll({
       where: { productId },
       order: [['dateRegister', 'DESC']], // Получение записей в порядке даты добавления (последние сначала)
     });
@@ -48,7 +48,7 @@ const updateProductPrice = async (id, price, quantity, dateRegister) => {
   }
 
   try {
-    const priceRecord = await ProductPrice.findByPk(id);
+    const priceRecord = await findByPk(id);
     if (!priceRecord) {
       return { success: false, error: 'Запись о цене не найдена' };
     }
@@ -72,7 +72,7 @@ const deleteProductPrice = async (id) => {
   }
 
   try {
-    const priceRecord = await ProductPrice.findByPk(id);
+    const priceRecord = await findByPk(id);
     if (!priceRecord) {
       return { success: false, error: 'Запись о цене не найдена' };
     }
@@ -85,4 +85,4 @@ const deleteProductPrice = async (id) => {
   }
 };
 
-module.exports = { addProductPrice, getProductPrices, updateProductPrice, deleteProductPrice };
+export default { addProductPrice, getProductPrices, updateProductPrice, deleteProductPrice };
